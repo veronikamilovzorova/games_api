@@ -1,0 +1,202 @@
+openapi: 3.0.2
+info:
+    title: games-api
+    version: 1.0.0
+    description: API for managing a list of games.
+paths:
+    /games:
+        get:
+            tags:
+                - games
+            summary: Get a list of all games
+            description: Returns a list of all games in API
+            responses:
+                '200':
+                    description: A list of games
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: integer
+                                        name:
+                                            type: string
+                                        price:
+                                            type: number
+                                            format: float
+            operationId: listGames
+        post:
+            tags:
+                - games
+            summary: Add a new game
+            description: Create a new game entry in the API
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                price:
+                                    type: number
+                                    format: float
+            responses:
+                '201':
+                    description: Game created successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                        type: integer
+                                    name:
+                                        type: string
+                                    price:
+                                        type: number
+                                        format: float
+                '400':
+                    description: Bad request due to missing parameters
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+    '/games/{id}':
+        get:
+            tags:
+                - details
+            summary: Get full details of a game
+            description: Returns full details of a given id game
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Numeric ID of the game to get
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Full details of a game
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                        type: integer
+                                    name:
+                                        type: string
+                                    price:
+                                        type: number
+                                        format: float
+                '404':
+                    description: Game not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+        put:
+            tags:
+                - games
+            summary: Update a game by ID
+            description: Updates an existing game entry in the API
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Numeric ID of the game to update
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                price:
+                                    type: number
+                                    format: float
+            responses:
+                '200':
+                    description: Game updated successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                        type: integer
+                                    name:
+                                        type: string
+                                    price:
+                                        type: number
+                                        format: float
+                '400':
+                    description: Bad request due to missing parameters
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                '404':
+                    description: Game not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+        delete:
+            tags:
+                - games
+            summary: Delete a game by ID
+            description: Deletes a game entry from the API
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Numeric ID of the game to delete
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Game deleted successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: "Game deleted successfully"
+                                    deletedGame:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: integer
+                                            name:
+                                                type: string
+                                            price:
+                                                type: number
+                                                format: float
+                '404':
+                    description: Game not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+components:
+    schemas:
+        error:
+            title: Error
+            type: object
+            properties:
+                error:
+                    type: string
+            example:
+                error: Error message.
